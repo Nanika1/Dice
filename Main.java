@@ -1,5 +1,5 @@
 class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        DiceRoller.main(new String[]{"1d20", "2d6", "6d4", "3d8"});
     }
 }

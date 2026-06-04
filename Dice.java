@@ -11,6 +11,13 @@ public class Dice {
         this.sides = sides;
         this.name = "d" + sides;
     }
+    Dice(String name) {
+        if (name == null || !name.matches("d\\d+")) {
+            throw new IllegalArgumentException("Name must be in the format 'dX' where X is a positive integer.");
+        }
+        this.name = name;
+        this.sides = Integer.parseInt(name.substring(1));
+    }
 
     /**
      * Returns the name of the dice (e.g., "d6" for a six-sided die).
@@ -61,22 +68,26 @@ public class Dice {
     }
 
     /**
-     * Rolls the dice twice and returns the higher of the two rolls.
-     * @return the higher of the two rolls
+     * Rolls the dice twice and returns an array containing the higher and lower rolls (advantage).
+     * @return an array with the higher roll first and the lower roll second
      */
-    public int rollAdvantage() {
+    public int[] rollAdvantage() {
         int firstRoll = roll();
         int secondRoll = roll();
-        return Math.max(firstRoll, secondRoll);
+        int higherRoll = Math.max(firstRoll, secondRoll);
+        int lowerRoll = Math.min(firstRoll, secondRoll);
+        return new int[]{higherRoll, lowerRoll};
     }
 
     /**
-    * Rolls the dice twice and returns the lower of the two rolls.
-    * @return the lower of the two rolls
-    */
-    public int rollDisadvantage() {
+     * Rolls the dice twice and returns an array containing the lower and higher rolls (disadvantage).
+     * @return an array with the lower roll first and the higher roll second
+     */
+    public int[] rollDisadvantage() {
         int firstRoll = roll();
         int secondRoll = roll();
-        return Math.min(firstRoll, secondRoll);
+        int higherRoll = Math.max(firstRoll, secondRoll);
+        int lowerRoll = Math.min(firstRoll, secondRoll);
+        return new int[]{lowerRoll, higherRoll};
     }
 }
