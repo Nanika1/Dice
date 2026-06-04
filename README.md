@@ -1,1 +1,3 @@
-# Nanika1
+# Dice
+
+A small Java program that lets you roll dice
