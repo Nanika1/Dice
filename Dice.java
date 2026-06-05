@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Arrays;
 
 /**
  * Represents a dice with a specified number of sides. Provides methods to roll the dice in various ways, including regular rolls, rolls with advantage, and rolls with disadvantage.
@@ -80,23 +81,23 @@ public class Dice {
     }
 
     /**
-     * Rolls the dice with advantage, returning an array containing the higher and lower rolls.
-     * @return an array where the first element is the higher roll and the second element is the lower roll
+     * Rolls the dice with advantage, returning the highest of two rolls along with both rolls for reference.
+     * @return an array where the first element is the result of the roll with advantage, and the next two elements are the individual rolls
      */
     private int[] _rollAdvantage() {
         int firstRoll = _roll();
         int secondRoll = _roll();
-        return new int[]{Math.max(firstRoll, secondRoll), Math.min(firstRoll, secondRoll)};
+        return new int[]{Math.max(firstRoll, secondRoll), firstRoll, secondRoll};
     }
 
     /**
-     * Rolls the dice with disadvantage, returning an array containing the lower and higher rolls.
-     * @return an array where the first element is the lower roll and the second element is the higher roll
+     * Rolls the dice with disadvantage, returning the lowest of two rolls along with both rolls for reference.
+     * @return an array where the first element is the result of the roll with disadvantage, and the next two elements are the individual rolls
      */
     private int[] _rollDisadvantage() {
         int firstRoll = _roll();
         int secondRoll = _roll();
-        return new int[]{Math.min(firstRoll, secondRoll), Math.max(firstRoll, secondRoll)};
+        return new int[]{Math.min(firstRoll, secondRoll), firstRoll, secondRoll};
     }
 
     /**
@@ -133,7 +134,7 @@ public class Dice {
      */
     public RollResult rollAdvantage() {
         int[] values = _rollAdvantage();
-        return new RollResult(values[0], values, _getMax(), _getMin(), RollType.ADVANTAGE);
+        return new RollResult(values[0], Arrays.copyOfRange(values, 1, values.length), _getMax(), _getMin(), RollType.ADVANTAGE);
     }
 
     /**
@@ -142,6 +143,6 @@ public class Dice {
      */
     public RollResult rollDisadvantage() {
         int[] values = _rollDisadvantage();
-        return new RollResult(values[0], values, _getMax(), _getMin(), RollType.DISADVANTAGE);
+        return new RollResult(values[0], Arrays.copyOfRange(values, 1, values.length), _getMax(), _getMin(), RollType.DISADVANTAGE);
     }
 }
