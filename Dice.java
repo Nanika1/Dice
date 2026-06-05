@@ -222,6 +222,9 @@ public class Dice {
      * @return the result of the roll
      */
     public RollResult roll(RollType rollType) {
+        if (rollType == null) {
+            throw new IllegalArgumentException("Roll type cannot be null.");
+        }
         return switch (rollType) {
             case ADVANTAGE -> rollAdvantage();
             case DISADVANTAGE -> rollDisadvantage();
@@ -238,6 +241,12 @@ public class Dice {
     public RollResult roll(int numberOfDice, RollType rollType) {
         if (numberOfDice < 1) {
             throw new IllegalArgumentException("Must roll at least one die.");
+        }
+        if (rollType == null) {
+            throw new IllegalArgumentException("Roll type cannot be null.");
+        }
+        if (numberOfDice == 1) {
+            return roll(rollType);  // Use the single die roll method for one die
         }
         return switch (rollType) {
             case ADVANTAGE -> rollAdvantage(numberOfDice);
