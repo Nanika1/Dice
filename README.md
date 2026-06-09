@@ -6,9 +6,9 @@ A small Java program that lets you roll dice
 
 ### Basic
 
-A *roll command* consists of one or more *commandletts*.
+A *roll command* consists of one or more *commandlettes*.
 
-A *commandlett* consists primarily of two components: *dice* and *modifiers*, and are separated as such: `<commandlett> + <commandlett>`.
+A *commandlette* consists primarily of two components: *dice* and *modifiers*, and are separated as such: `<commandlette> + <commandlette>`.
 (e.g. `1d12 + 2d6`)
 
 The *dice* component has notation: `XdY`, where `X` is the number of dice, and `Y` is the number of sides the dice has.
