@@ -8,13 +8,16 @@
  * The class includes methods for identifying special commands, extracting roll components, parsing modifiers, and determining the type of roll being executed.
  */
 public class DiceRoller {
-    private static final String SPECIAL_COMMAND_REGEX = "(adv|dis)+\\(+\\d+d\\d+([+-]\\d+)*\\)+";  // Matches commands like "adv(1d20+5)" or "dis(2d6-3)"
+    private static final String SPECIAL_COMMANDLETTE_REGEX = "(adv|dis)\\(\\d+d\\d+([+-]\\d+)*\\)";  // Matches commands like "adv(1d20+5)" or "dis(2d6-3)"
+    private static final String SPECIAL_COMMAND_REGEX = "(adv|dis)\\((\\d+d\\d+([+-]\\d+)*)((\\s+[+]\\s+)(\\d+d\\d+([+-]\\d+)*))*\\)";  // Matches any special commandlette sequence
     private static final String ROLL_REGEX = "\\d+d\\d+";  // Matches basic roll commands like "2d6"
     private static final String MODIFIER_REGEX = "[+-]\\d+";  // Matches modifiers like "+5" or "-3"
     private static final String POSITIVE_MODIFIER_REGEX = "[+]+\\d+";  // Matches positive modifiers like "+5"
     private static final String NEGATIVE_MODIFIER_REGEX = "[-]+\\d+";  // Matches negative modifiers like "-3"
     private static final String CONTAINS_MODIFIER_REGEX = ".*[+-]\\d+.*";  // Checks if the command contains a modifier
-    private static final String SEPARATOR_REGEX = "\\s+[+-]\\s+";  // Matches comma separators with optional whitespace
+    private static final String SEPARATOR_REGEX = "\\s+[+]\\s+";  // Matches the separator for multiple commands, e.g., "1d20+5 + adv(1d20)"
+
+    private static final String[] ROLL_TYPES = {"adv", "dis"};
 
     /**
      * Checks if a command is a special command (e.g., "adv" or "dis").
@@ -25,13 +28,17 @@ public class DiceRoller {
         return command.matches(SPECIAL_COMMAND_REGEX);
     }
 
+    private static boolean _isCommandlette(String command) {
+        return !command.contains(" + ");
+    }
+
     /**
-     * Checks if a command contains a modifier (e.g., "+5" or "-3").
-     * @param command the command to check
-     * @return true if the command contains a modifier, false otherwise
+     * Checks if a commandlette contains a modifier (e.g., "+5" or "-3").
+     * @param command the commandlette to check
+     * @return true if the commandlette contains a modifier, false otherwise
      */
-    private static boolean _commandContainsModifier(String command) {
-        return command.matches(CONTAINS_MODIFIER_REGEX);
+    private static boolean _commandletteContainsModifier(String commandlette) {
+        return commandlette.matches(CONTAINS_MODIFIER_REGEX);
     }
 
     /**
@@ -39,27 +46,33 @@ public class DiceRoller {
      * @param command the roll command to split
      * @return an array of strings representing the components of the command
      */
-    private static String[] _splitCommandIntoComponents(String command) {
+    private static String[] _splitCommandIntoCommandlettes(String command) {
         return command.split(SEPARATOR_REGEX);
     }
 
+    private static String[] _separateSpecialFromBasic(String command) {
+        String basicPart = command.replaceAll(SPECIAL_COMMAND_REGEX, "");
+        // TODO: implement a way to isolate special commands from the roll command
+        return null;
+    }
+
     /**
-     * Extracts the roll and modifier components from a command.
+     * Extracts the roll and modifier components from a commandlette.
      * </br>
      * </br>
-     * For example, given the command "1d20+5", this method would return an array where the first element is "1d20" and the second element is "+5".
+     * For example, given the commandlette "1d20+5", this method would return an array where the first element is "1d20" and the second element is "+5".
      * </br>
      * </br>
-     * INVARIANT: The input command must contain a valid roll format (e.g., "XdY") and may optionally include modifiers (e.g., "+Z" or "-Z").
+     * INVARIANT: The input commandlette must contain a valid roll format (e.g., "XdY") and may optionally include modifiers (e.g., "+Z" or "-Z").
      * </br>
-     * INVARIANT: The input command is not special (i.e., it does not contain "adv" or "dis").
-     * @param command the command to extract components from
+     * INVARIANT: The input commandlette is not special (i.e., it does not contain "adv" or "dis").
+     * @param commandlette the commandlette to extract components from
      * @return an array where the first element is the roll part and the second element is the modifier part
      */
-    private static String[] _extractRollComponents(String command) {
-        String rollPart = command.replaceAll(MODIFIER_REGEX, "");  // Remove the modifier part to isolate the roll command
-        String modifierPart = command.replaceAll(ROLL_REGEX, "");  // Remove the roll part to isolate the modifier
-        if (modifierPart.equals(command)) {
+    private static String[] _extractCommandletteComponents(String commandlette) {
+        String rollPart = commandlette.replaceAll(MODIFIER_REGEX, "");  // Remove the modifier part to isolate the roll commandlette
+        String modifierPart = commandlette.replaceAll(ROLL_REGEX, "");  // Remove the roll part to isolate the modifier
+        if (modifierPart.equals(commandlette)) {
             modifierPart = "";
         }
         return new String[]{rollPart, modifierPart};
@@ -132,7 +145,7 @@ public class DiceRoller {
      * @return the final result of the roll after applying any modifiers
      */
     private static int _parseRoll(String command, RollType rollType) {
-        String[] components = _extractRollComponents(command);
+        String[] components = _extractCommandletteComponents(command);
 
         String modifierPart = components[1];
         int modifierValue = _parseModifier(modifierPart);
@@ -161,7 +174,7 @@ public class DiceRoller {
      */
     public static int parseRollCommand(String command) {
         int finalResult = -1;  // Placeholder for the final result of the roll
-        if (!command.contains(" + ") && !command.contains(" - ")) {
+        if (_isCommandlette(command)) {
             if (_isSpecialCommand(command)) {
                 finalResult = _handleSpecialRoll(command);
             } else {
@@ -170,7 +183,7 @@ public class DiceRoller {
             return finalResult;
         }
 
-        String[] commands = _splitCommandIntoComponents(command);
+        String[] commands = _splitCommandIntoCommandlettes(command);
 
         for (String cmd : commands) {
             boolean isSpecial = _isSpecialCommand(cmd);
