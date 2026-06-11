@@ -1,10 +1,34 @@
+<a id="readme-top"></a>
+
 # JavaDice
+
+<!-- PROJECT SHIELDS (TBA) -->
+
+## About JavaDice
 
 A small Java program that lets you roll dice
 
+### Built With
+
+- java 25.0.1
+
+## User Guide
+
+### How to Build
+
+```bash
+javac *.java
+```
+
+### How to Run
+
+```bash
+java Main
+```
+
 ## Notation
 
-### Basic
+### Basic Commands
 
 A *roll command* consists of one or more *commandlettes*.
 
@@ -17,7 +41,7 @@ The *dice* component has notation: `XdY`, where `X` is the number of dice, and `
 The *modifier* component has notation: `+Z` or `-Z`, and is always located AFTER the *dice* component.
 (e.g. `+3` is a "plus three" modifier, and is placed as such: `2d6+3`)
 
-### Special
+### Special Commands
 
 A *roll command* is said to be *special* if it contains one or more *roll type specifier*.
 
@@ -26,20 +50,7 @@ A *roll type specifier* specifies which of the following *roll types* a roll is:
 - Advantage -- each die is rolled twice, the higher of the two results becomes the final result of the roll -- `adv(1d20)`
 - Disadvantage -- each die is rolled twice, the lower of the two results becomes the final result of the roll -- `dis(1d20)`
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## User guide
-
-Use `make` with the provided `makefile`, or do the following:
-
-To compile:
-```bash
-javac *.java
-```
-To run:
-```bash
-java Main
-```
-
-## Author
-
-- Nanika1
+<!-- MARKDOWN LINKS & IMAGES (TBA) -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
