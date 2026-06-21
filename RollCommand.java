@@ -148,7 +148,7 @@ class RollCommand {
     public String toString() {
         String command = "";
         for (Commandlette cmdlt : _commandlettes) {
-            if (command.matches("")) command += "" + cmdlt;
+            if (command.equals("")) command += "" + cmdlt;
             else command += " + " + cmdlt;
         }
         return command;
